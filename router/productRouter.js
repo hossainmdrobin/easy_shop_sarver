@@ -4,7 +4,8 @@ const {
     addProductController,
     getAllProductController,
     getProductByIdController,
-    getProductByCatagoryController
+    getProductByCatagoryController,
+    updateProduct
 } = require('../controller/productController')
 const multer = require('multer')
 const path = require('path')
@@ -50,5 +51,7 @@ router.post('/add', upload.single('photo'), productValidator, addProductControll
 router.get('/getAllProduct', getAllProductController)
 router.get('/getProductById/:id',getProductByIdController)
 router.get('/getProductByCatagory/:catagory',getProductByCatagoryController)
+router.post('/update/:id', updateProduct)
+router.get('delete/:id', )
 
 module.exports = router;

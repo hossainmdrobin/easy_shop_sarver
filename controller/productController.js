@@ -3,48 +3,63 @@ const validatorFormatter = require('../utils/validatorFormatter')
 const Product = require('../models/products')
 exports.addProductController = (req, res, next) => {
     try {
-        
+
         const errors = validationResult(req).formatWith(validatorFormatter).mapped()
         if (Object.keys(errors).length !== 0) {
             return console.log(errors)
         }
         const product = new Product({ ...req.body, photo: req.file.filename })
         product.save()
-        .then(response=> res.status(200).json({message: 'Product uploaded Successfully'}) )
-    }catch(err){
+            .then(response => res.status(200).json({ message: 'Product uploaded Successfully' }))
+    } catch (err) {
         console.log(err)
     }
 }
 
 exports.getAllProductController = async (req, res) => {
-    try{
+    try {
         const products = await Product.find({});
-        if(products){
+        if (products) {
             res.status(200).json(products)
         }
-    }catch{
-        res.status(500).json({message: 'Internal Server Error'})
+    } catch {
+        res.status(500).json({ message: 'Internal Server Error' })
     }
 }
 
 exports.getProductByIdController = async (req, res) => {
-    try{
+    try {
         const product = await Product.findById(req.params.id)
-        if(product){
+        if (product) {
             res.status(200).json(product)
         }
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
 }
-exports.getProductByCatagoryController =async (req, res) => {
-    try{
-        const products = await Product.find({title: req.params.catagory})
-        if(products){
+exports.getProductByCatagoryController = async (req, res) => {
+    try {
+        const products = await Product.find({ title: req.params.catagory })
+        if (products) {
             res.status(200).json(products)
         }
-    }catch(err){
+    } catch (err) {
         console.log(err)
     }
+}
+
+exports.updateProduct = async (req, res) => {
+    try {
+        console.log(req.body)
+        const { name, title, desc, price, oldPrice } = req.body;
+        const product = await Product.findByIdAndUpdate(req.params.id, { $set: { name, title, desc, price, oldPrice } })
+        if (product) {
+            res.status(200).json({message: 'Product Updated Successfully'})
+        }
+    }catch(e){
+        console.log(e);
+        
+    }
+
 
 }
