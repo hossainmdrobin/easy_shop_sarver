@@ -1,6 +1,10 @@
 const router = require('express').Router()
+const productValidator = require('../validators/productValidator')
 const {
-    addProductController
+    addProductController,
+    getAllProductController,
+    getProductByIdController,
+    getProductByCatagoryController
 } = require('../controller/productController')
 const multer = require('multer')
 const path = require('path')
@@ -25,7 +29,7 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 1000000
+        fileSize: 5000000
     },
     fileFilter: (req, file, cb) => {
         if (
@@ -40,6 +44,11 @@ const upload = multer({
     }
 })
 
-router.post('/add', upload.single('photo'), addProductController)
+router.post('/add', upload.single('photo'), productValidator, addProductController)
+
+// FETCH PRODUCTS BY DEFFERENT WAY
+router.get('/getAllProduct', getAllProductController)
+router.get('/getProductById/:id',getProductByIdController)
+router.get('/getProductByCatagory/:catagory',getProductByCatagoryController)
 
 module.exports = router;

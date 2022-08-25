@@ -1,4 +1,50 @@
+const { validationResult } = require('express-validator')
+const validatorFormatter = require('../utils/validatorFormatter')
+const Product = require('../models/products')
 exports.addProductController = (req, res, next) => {
-    console.log(req.body)
-    console.log(req.file)
+    try {
+        
+        const errors = validationResult(req).formatWith(validatorFormatter).mapped()
+        if (Object.keys(errors).length !== 0) {
+            return console.log(errors)
+        }
+        const product = new Product({ ...req.body, photo: req.file.filename })
+        product.save()
+        .then(response=> res.status(200).json({message: 'Product uploaded Successfully'}) )
+    }catch(err){
+        console.log(err)
+    }
+}
+
+exports.getAllProductController = async (req, res) => {
+    try{
+        const products = await Product.find({});
+        if(products){
+            res.status(200).json(products)
+        }
+    }catch{
+        res.status(500).json({message: 'Internal Server Error'})
+    }
+}
+
+exports.getProductByIdController = async (req, res) => {
+    try{
+        const product = await Product.findById(req.params.id)
+        if(product){
+            res.status(200).json(product)
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
+exports.getProductByCatagoryController =async (req, res) => {
+    try{
+        const products = await Product.find({title: req.params.catagory})
+        if(products){
+            res.status(200).json(products)
+        }
+    }catch(err){
+        console.log(err)
+    }
+
 }
