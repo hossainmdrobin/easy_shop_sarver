@@ -10,11 +10,28 @@ exports.addProductController = (req, res, next) => {
         if (Object.keys(errors).length !== 0) {
             return console.log(errors)
         }
-        const product = new Product({ ...req.body, photo: req.file.filename })
+        var img = fs.readFileSync(`${req.file.path}`);
+
+        var encode_img = img.toString('base64');
+
+        var final_img = {
+            contentType: req.file.mimetype,
+            hr: "hridoy",
+            image: Buffer.from(encode_img, 'base64')
+        };
+        console.log(req.file)
+        const product = new Product({ ...req.body, photo: final_img })
         product.save()
-            .then(response => res.status(200).json({ message: 'Product uploaded Successfully' }))
+            .then(response => {
+                if (response) {
+                    fs.unlink(`./uploads/${req.file.filename}`, (err) => {
+                        if (err) console.log(err)
+                    })
+                    res.status(200).json({ message: 'Product uploaded Successfully' })
+                }
+            })
     } catch (err) {
-        console.log(err)
+        console.log(err, "err")
     }
 }
 

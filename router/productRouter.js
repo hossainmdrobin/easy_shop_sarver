@@ -12,11 +12,12 @@ const multer = require('multer')
 const path = require('path')
 
 //MULTER STORAGE
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, `${__dirname}/../public/uploads`)
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads')
     },
-    filename: (req, file, cb) => {
+    filename: (req, file, cb) => {  
         const fileExt = path.extname(file.originalname);
         const fileName = file.originalname
             .replace(fileExt, '')
@@ -25,8 +26,7 @@ const storage = multer.diskStorage({
             .join('-') + '-' + Date.now();
         cb(null, fileName + fileExt)
     }
-})
-
+  })
 // MULTER UPLOAD OBJECT
 const upload = multer({
     storage: storage,
