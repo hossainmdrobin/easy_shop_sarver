@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const cors = require('cors')
 const app = express()
 require('dotenv').config()
+const path = require('path')
 
 // IMPORTING ROUTERS
 const productRouter = require('./router/productRouter')
