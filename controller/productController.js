@@ -1,6 +1,8 @@
 const { validationResult } = require('express-validator')
 const validatorFormatter = require('../utils/validatorFormatter')
 const Product = require('../models/products')
+const fs = require('fs')
+
 exports.addProductController = (req, res, next) => {
     try {
 
@@ -54,12 +56,29 @@ exports.updateProduct = async (req, res) => {
         const { name, title, desc, price, oldPrice } = req.body;
         const product = await Product.findByIdAndUpdate(req.params.id, { $set: { name, title, desc, price, oldPrice } })
         if (product) {
-            res.status(200).json({message: 'Product Updated Successfully'})
+            res.status(200).json({ message: 'Product Updated Successfully' })
         }
-    }catch(e){
+    } catch (e) {
         console.log(e);
-        
+
     }
+}
 
+exports.deleteProduct = async (req, res) => {
+    try {
+        console.log(req.params.id)
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (product) {
+            console.log(product)
+            const path = `./public/uploads/${product.photo}`
+            fs.unlink(path, (err) => {
+                if (err) {
+                    console.error(err)
+                    return
+                }
+            })
+        }
+    } catch {
 
+    }
 }
