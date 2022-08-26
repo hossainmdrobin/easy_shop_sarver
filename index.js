@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8080;
 // USING MIDDLEWARES
 app.use(morgan('dev'))
 app.use(cors())
-app.use(express.static('uploads'))
+app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express(urlencoded({extended:true})))
 app.use(express.json())
 
