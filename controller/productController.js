@@ -16,10 +16,9 @@ exports.addProductController = (req, res, next) => {
 
         var final_img = {
             contentType: req.file.mimetype,
-            hr: "hridoy",
             image: Buffer.from(encode_img, 'base64')
         };
-        console.log(req.file)
+        
         const product = new Product({ ...req.body, photo: final_img })
         product.save()
             .then(response => {
